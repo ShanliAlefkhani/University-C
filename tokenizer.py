@@ -23,16 +23,17 @@ class Tokenizer:
 
     def process_token(self, s, token):
         if token is T_SYM:
-            if s == "\"" and self.string:
-                self.tokens.append((T_STR, self.current_string))
-                self.current_string = ""
-                self.string = False
             if s == "*/":
                 self.comment = False
             if not self.comment:
                 self.tokens.append((token, s))
-            if s == "\"" and not self.string:
-                self.string = True
+            if s == "\"":
+                x = self.start + self.decaf_code[self.start+1:].find("\"") + 1
+                while self.decaf_code[x-1] == "\\":
+                    x += self.decaf_code[x+1:].find("\"") + 1
+                self.tokens.append((T_STR, self.decaf_code[self.start+1:x]))
+                self.tokens.append((token, s))
+                self.end = x + 1
             if s == "/*":
                 self.comment = True
             if s == "//":
