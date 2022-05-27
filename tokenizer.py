@@ -24,8 +24,7 @@ class Tokenizer:
     def process_token(self, s, token):
         if token is T_SYM:
             if s == "\"" and self.string:
-                self.symbols_table.append(self.current_string)
-                self.tokens.append((T_STR, len(self.symbols_table)))
+                self.tokens.append((T_STR, self.current_string))
                 self.current_string = ""
                 self.string = False
             if s == "*/":
