@@ -1,3 +1,6 @@
+from constants import *
+
+
 class DFA:
     def __init__(self, transition_function=None, final_states=None, language=None, token=None):
         if transition_function:
@@ -58,3 +61,13 @@ class DFA:
             return self.final_states[state]
         except KeyError:
             return None
+
+
+keywords = ["def", "if", "else", "while", "return", "break", "continue", "int", "bool", "void", "true", "false"]
+symbols = ["*", "+", "-", "||", "&&", "=", "==", ">", "<", ">=", "<=", "/", "%", "!", "!=", "(", ")", "[", "]", "{", "}", ";", "//", "/*", "*/", "\""]
+
+dfa_key = DFA(language=keywords, token=T_KEY)
+dfa_sym = DFA(language=symbols, token=T_SYM)
+dfa_id = DFA(transition_function=TF_ID, final_states=FS_ID)
+dfa_dec = DFA(transition_function=TF_DEC, final_states=FS_DEC)
+dfa_hex = DFA(transition_function=TF_HEX, final_states=FS_HEX)
