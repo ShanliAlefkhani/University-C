@@ -4,7 +4,7 @@ from constants import *
 
 if __name__ == '__main__':
     keywords = ["def", "if", "else", "while", "return", "break", "continue", "int", "bool", "void", "true", "false"]
-    symbols = ["*", "+", "-", "||", "&&", "=", "==", "/", "+=", "-=", "%", "!", "!=", "(", ")", "[", "]", "{", "}", ";"]
+    symbols = ["*", "+", "-", "||", "&&", "=", "==", ">", "<", ">=", "<=", "/", "%", "!", "!=", "(", ")", "[", "]", "{", "}", ";"]
 
     dfa_key = DFA(language=keywords, token=T_KEY)
     dfa_sym = DFA(language=symbols, token=T_SYM)
@@ -17,7 +17,7 @@ if __name__ == '__main__':
     words = input_file_content.split()
 
     tokens = []
-    symbol_table = []
+    symbols_table = []
 
     for word in words:
         start = 0
@@ -33,9 +33,9 @@ if __name__ == '__main__':
             if token is T_SYM:
                 tokens.append((token, s))
             else:
-                if s not in symbol_table:
-                    symbol_table.append(s)
-                tokens.append((token, symbol_table.index(s)))
+                if s not in symbols_table:
+                    symbols_table.append(s)
+                tokens.append((token, symbols_table.index(s)))
 
     print(tokens)
-    print(symbol_table)
+    print(symbols_table)
