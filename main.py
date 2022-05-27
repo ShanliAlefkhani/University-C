@@ -12,38 +12,53 @@ if __name__ == '__main__':
     dfa_dec = DFA(transition_function=TF_DEC, final_states=FS_DEC)
     dfa_hex = DFA(transition_function=TF_HEX, final_states=FS_HEX)
 
-    input_file_address = sys.argv[1]
-    input_file_content = open(input_file_address).read()
-    words = input_file_content.split()
+    input_file_address = "source.decaf" #sys.argv[1]
+    decaf_code = open(input_file_address).read()
 
     tokens = []
     symbols_table = []
 
     comment = False
+    string = False
+    current_string = ""
 
-    for word in words:
-        start = 0
-        end = len(word)
-        while start != end:
-            s = word[start:end]
-            token = dfa_key.run(s) or dfa_sym.run(s) or dfa_id.run(s) or dfa_dec.run(s) or dfa_hex.run(s)
-            if not token:
-                end -= 1
-                continue
-            start = end
-            end = len(word)
-            if token is T_SYM:
-                if s == "*/":
-                    comment = False
-                if not comment:
-                    tokens.append((token, s))
-                if s == "/*":
-                    comment = True
-            else:
-                if not comment:
-                    if s not in symbols_table:
-                        symbols_table.append(s)
-                    tokens.append((token, symbols_table.index(s) + 1))
+    start = 0
+    end = len(decaf_code)
+    while start != end:
+        s = decaf_code[start:end]
+        if s.isspace():
+            if string:
+                current_string += s
+            start += len(s)
+            end = len(decaf_code)
+            continue
+        token = dfa_key.run(s) or dfa_sym.run(s) or dfa_id.run(s) or dfa_dec.run(s) or dfa_hex.run(s)
+        if not token:
+            end -= 1
+            continue
+        start = end
+        end = len(decaf_code)
+        if token is T_SYM:
+            if s == "\"" and string:
+                symbols_table.append(current_string)
+                tokens.append((T_STR, len(symbols_table)))
+                current_string = ""
+                string = False
+            if s == "*/":
+                comment = False
+            if not comment:
+                tokens.append((token, s))
+            if s == "\"" and not string:
+                string = True
+            if s == "/*":
+                comment = True
+        else:
+            if string:
+                current_string += s
+            if not comment and not string:
+                if s not in symbols_table:
+                    symbols_table.append(s)
+                tokens.append((token, symbols_table.index(s) + 1))
 
     tokens_file = open("source_tokens.txt", "w")
     symbols_table_file = open("source_symbols_table.txt", "w")
