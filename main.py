@@ -15,10 +15,11 @@ def str_comment_remove(string):
         string = string[:start + 2] + string[end:]
         start = string.find('/*', end + 1)
 
+    string = string.replace("\\\"", "")
     start = string.find('\"')
     while(start != -1):
-        end = string.find('\"' , start+1)
-        string = string[:start+1] + "" + string[end:]
+        end = string.find('\"' , start + 1)
+        string = string[:start + 1] + "" + string[end:]
         start = string.find('\"', end + 1)
     
     return string
@@ -33,7 +34,7 @@ if __name__ == '__main__':
     dfa_dec = DFA(transition_function = TF_DEC, final_states = FS_DEC)
     dfa_hex = DFA(transition_function = TF_HEX, final_states = FS_HEX)
 
-    input_file_address = "source.decaf" #sys.argv[1]
+    input_file_address = sys.argv[1]
     input_file_content = open(input_file_address).read()
     input_file_content = str_comment_remove(input_file_content)
     words = input_file_content.split()
