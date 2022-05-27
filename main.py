@@ -2,9 +2,30 @@ import sys
 from dfa import DFA
 from constants import *
 
+def str_comment_remove(string):
+    start = string.find('//')
+    while(start != -1):
+        end = string.find('\n' , start + 2)
+        string = string[:start + 2] + string[end:]
+        start = string.find('//', end + 1)
+
+    start = string.find('/*')
+    while(start != -1):
+        end = string.find('*/' , start + 2)
+        string = string[:start + 2] + string[end:]
+        start = string.find('/*', end + 1)
+
+    start = string.find('\"')
+    while(start != -1):
+        end = string.find('\"' , start+1)
+        string = string[:start+1] + "" + string[end:]
+        start = string.find('\"', end + 1)
+    
+    return string
+
 if __name__ == '__main__':
     keywords = ["def", "if", "else", "while", "return", "break", "continue", "int", "bool", "void", "true", "false"]
-    symbols = ["*", "+", "-", "||", "&&", "=", "==", ">", "<", ">=", "<=", "/", "%", "!", "!=", "(", ")", "[", "]", "{", "}", ";"]
+    symbols = ["*", "+", "-", "||", "&&", "=", "==", ">", "<", ">=", "<=", "/", "%", "!", "!=", "(", ")", "[", "]", "{", "}", ";", "//", "/*", "*/", "\""]
 
     dfa_key = DFA(language = keywords, token = T_KEY)
     dfa_sym = DFA(language = symbols, token = T_SYM)
@@ -12,9 +33,12 @@ if __name__ == '__main__':
     dfa_dec = DFA(transition_function = TF_DEC, final_states = FS_DEC)
     dfa_hex = DFA(transition_function = TF_HEX, final_states = FS_HEX)
 
-    input_file_address = sys.argv[1]
+    input_file_address = "source.decaf" #sys.argv[1]
     input_file_content = open(input_file_address).read()
+    input_file_content = str_comment_remove(input_file_content)
     words = input_file_content.split()
+    
+    words = "".join(input_file_content).split()
 
     tokens = []
     symbols_table = []
