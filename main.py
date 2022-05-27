@@ -12,18 +12,17 @@ if __name__ == '__main__':
     dfa_dec = DFA(transition_function=TF_DEC, final_states=FS_DEC)
     dfa_hex = DFA(transition_function=TF_HEX, final_states=FS_HEX)
 
-    input_file_address = "source.decaf" #sys.argv[1]
+    input_file_address = sys.argv[1]
     decaf_code = open(input_file_address).read()
 
     tokens = []
     symbols_table = []
-
     comment = False
     string = False
     current_string = ""
-
     start = 0
     end = len(decaf_code)
+
     while start != end:
         s = decaf_code[start:end]
         if s.isspace():
@@ -36,8 +35,6 @@ if __name__ == '__main__':
         if not token:
             end -= 1
             continue
-        start = end
-        end = len(decaf_code)
         if token is T_SYM:
             if s == "\"" and string:
                 symbols_table.append(current_string)
@@ -53,7 +50,7 @@ if __name__ == '__main__':
             if s == "/*":
                 comment = True
             if s == "//":
-                start += decaf_code[start:].find("\n")
+                end += decaf_code[start:].find("\n")
         else:
             if string:
                 current_string += s
@@ -61,6 +58,9 @@ if __name__ == '__main__':
                 if s not in symbols_table:
                     symbols_table.append(s)
                 tokens.append((token, symbols_table.index(s) + 1))
+
+        start = end
+        end = len(decaf_code)
 
     tokens_file = open("source_tokens.txt", "w")
     symbols_table_file = open("source_symbols_table.txt", "w")
