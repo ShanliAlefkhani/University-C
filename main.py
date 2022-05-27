@@ -52,6 +52,8 @@ if __name__ == '__main__':
                 string = True
             if s == "/*":
                 comment = True
+            if s == "//":
+                start += decaf_code[start:].find("\n")
         else:
             if string:
                 current_string += s
