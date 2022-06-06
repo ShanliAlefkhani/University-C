@@ -31,7 +31,8 @@ class Tokenizer:
                 x = self.start + self.decaf_code[self.start+1:].find("\"") + 1
                 while self.decaf_code[x-1] == "\\":
                     x += self.decaf_code[x+1:].find("\"") + 1
-                self.tokens.append((T_STR, self.decaf_code[self.start+1:x]))
+                self.symbols_table.append(self.decaf_code[self.start+1:x])
+                self.tokens.append((T_STR, self.symbols_table.index(self.decaf_code[self.start+1:x]) + 1))
                 self.tokens.append((token, s))
                 self.end = x + 1
             if s == "/*":
@@ -59,3 +60,4 @@ class Tokenizer:
             else:
                 self.end -= 1
         return self.tokens, self.symbols_table
+        
