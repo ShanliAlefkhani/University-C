@@ -40,6 +40,8 @@ class Tokenizer:
                 self.end += self.decaf_code[self.start:].find("\n")
         elif token is T_DEC or token is T_HEX:
             self.tokens.append((token, s))
+        elif token is T_KEY:
+            self.tokens.append((token, s))
         else:
             if self.string:
                 self.current_string += s
