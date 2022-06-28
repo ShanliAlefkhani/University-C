@@ -61,4 +61,3 @@ class Tokenizer:
             else:
                 self.end -= 1
         return self.tokens, self.symbols_table
-        
