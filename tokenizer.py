@@ -38,6 +38,8 @@ class Tokenizer:
                 self.comment = True
             if s == "//":
                 self.end += self.decaf_code[self.start:].find("\n")
+        elif token is T_DEC or token is T_HEX:
+            self.tokens.append((token, s))
         else:
             if self.string:
                 self.current_string += s
