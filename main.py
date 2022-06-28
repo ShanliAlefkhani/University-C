@@ -1,15 +1,12 @@
 import sys
 from tokenizer import Tokenizer
-from parser import LLOneParser
 
 if __name__ == '__main__':
-    input_file_address = "source.decaf"  # sys.argv[1]
+    input_file_address = sys.argv[1]
     decaf_code = open(input_file_address).read()
 
     decaf_tokenizer = Tokenizer(decaf_code)
     tokens, symbols_table = decaf_tokenizer.run()
-
-    LLOneParser(tokens)
 
     tokens_file = open("source_tokens.txt", "w")
     symbols_table_file = open("source_symbols_table.txt", "w")
