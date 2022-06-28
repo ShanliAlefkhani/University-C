@@ -7,7 +7,7 @@ class LLOneParser:
     rules = RULES
     non_term_user_def = VARIABLES
     term_user_def = TERMINALS
-    sample_input_string = "int T_ID ;"
+    sample_input_string = "def int T_ID ( ) { }"
     start_symbol = "Program"
 
     def __init__(self):
@@ -15,8 +15,8 @@ class LLOneParser:
         for rule in self.rules:
             k = rule.split("->")
             self.diction[k[0].strip()] = [y.split() for y in k[1].split(' | ')]
-        # self.diction = self.remove_left_recursion(self.diction)
-        # self.diction = self.left_factoring(self.diction)
+        self.diction = self.remove_left_recursion(self.diction)
+        self.diction = self.left_factoring(self.diction)
         self.nt_list = list(self.diction.keys())
         self.k = {}
         self.firsts = {y: [self.first(sub) for sub in self.diction[y]] for y in self.diction.keys()}
