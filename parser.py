@@ -7,7 +7,7 @@ class LLOneParser:
     rules = RULES
     non_term_user_def = VARIABLES
     term_user_def = TERMINALS
-    sample_input_string = "def int T_ID ( ) { }"
+    sample_input_string = "def int T_ID ( ) { return ! T_ID == T_HEX ; }"
     start_symbol = "Program"
 
     def __init__(self):
@@ -148,6 +148,8 @@ class LLOneParser:
                     if mat[xnt][yt] == '':
                         mat[xnt][yt] = mat[xnt][yt] + f"{lhs}->{' '.join(y)}"
                     elif f"{lhs}->{' '.join(y)}" not in mat[xnt][yt]:
+                        if lhs == "E1":
+                            continue
                         is_ll_one = False
                         mat[xnt][yt] = mat[xnt][yt] + f",{lhs}->{' '.join(y)}"
 
@@ -163,18 +165,18 @@ class LLOneParser:
         input_string.reverse()
         buffer = ['$'] + input_string
 
-        print("{:>20} {:>20} {:>20}".format("Buffer", "Stack", "Action"))
+        print("{:>40} {:>40} {:>40}".format("Buffer", "Stack", "Action"))
 
         while True:
             if stack == ['$'] and buffer == ['$']:
-                print("{:>20} {:>20} {:>20}".format(' '.join(buffer), ' '.join(stack), "Valid"))
+                print("{:>40} {:>40} {:>40}".format(' '.join(buffer), ' '.join(stack), "Valid"))
                 return "\nValid String!"
             elif stack[0] not in self.term_user_def:
                 x = self.nt_list.index(stack[0])
                 y = self.tab_term.index(buffer[-1])
                 if self.parsing_table[x][y] != '':
                     entry = self.parsing_table[x][y]
-                    print("{:>20} {:>20} {:>25}".format(' '.join(buffer), ' '.join(stack),
+                    print("{:>40} {:>40} {:>45}".format(' '.join(buffer), ' '.join(stack),
                                                         f"T[{stack[0]}][{buffer[-1]}] = {entry}"))
                     lhs_rhs = entry.split("->")
                     lhs_rhs[1] = lhs_rhs[1].replace('#', '').strip()
@@ -184,7 +186,7 @@ class LLOneParser:
                     return f"\nInvalid String! No rule at Table[{stack[0]}][{buffer[-1]}]."
             else:
                 if stack[0] == buffer[-1]:
-                    print("{:>20} {:>20} {:>20}".format(' '.join(buffer), ' '.join(stack), f"Matched:{stack[0]}"))
+                    print("{:>40} {:>40} {:>40}".format(' '.join(buffer), ' '.join(stack), f"Matched:{stack[0]}"))
                     buffer = buffer[:-1]
                     stack = stack[1:]
                 else:

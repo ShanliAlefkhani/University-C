@@ -91,9 +91,9 @@ RULES = [
     "S1 -> else Block | #",
     "S2 -> Expr | #",
 
-    "Expr -> UnOp BaseExpr E | BaseExpr E ",
+    "Expr -> UnOp BaseExpr E1 | BaseExpr E1 ",
 
-    "E -> BinOp Expr E",  # | #
+    "E1 -> BinOp Expr E1 | #",
 
     "BinOp -> && | || | == | > | < | >= | <= | * | + | != | - | % | / ",
 
