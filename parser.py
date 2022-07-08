@@ -8,10 +8,10 @@ class LLOneParser:
     rules = RULES
     non_term_user_def = VARIABLES
     term_user_def = TERMINALS
-    sample_input_string = "def int T_ID ( int T_ID , int T_ID ) { return T_ID + T_ID ; } def int T_ID ( ) { int T_ID ; T_ID = T_DEC ; return T_ID ( T_ID , T_DEC ) ; }"
     start_symbol = "Program"
 
-    def __init__(self):
+    def __init__(self, sample_input_string):
+        self.sample_input_string = sample_input_string
         self.diction = {}
         for rule in self.rules:
             k = rule.split("->")
