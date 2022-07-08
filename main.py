@@ -1,4 +1,6 @@
 import sys
+
+from constants import T_KEY, T_SYM
 from parser import LLOneParser
 from tokenizer import Tokenizer
 
@@ -8,7 +10,15 @@ if __name__ == '__main__':
 
     decaf_tokenizer = Tokenizer(decaf_code)
     tokens, symbols_table = decaf_tokenizer.run()
-    ll_one_parser = LLOneParser("def int T_ID ( int T_ID , int T_ID ) { return T_ID + T_ID ; } def int T_ID ( ) { int T_ID ; T_ID = T_DEC ; return T_ID ( T_ID , T_DEC ) ; }")
+    parser_input_list = []
+    for t in tokens:
+        if t[0] is T_KEY:
+            parser_input_list.append(symbols_table[t[1]])
+        elif t[0] is T_SYM:
+            parser_input_list.append(t[1])
+        else:
+            parser_input_list.append(t[0])
+    ll_one_parser = LLOneParser(" ".join(parser_input_list))
     abstract_syntax_tree_string = ll_one_parser.get_ast_string()
 
     tokens_file = open("source_tokens.txt", "w")

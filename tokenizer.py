@@ -46,7 +46,7 @@ class Tokenizer:
             if not self.comment and not self.string:
                 if s not in self.symbols_table:
                     self.symbols_table.append(s)
-                self.tokens.append((token, self.symbols_table.index(s) + 1))
+                self.tokens.append((token, self.symbols_table.index(s)))
 
     def run(self):
         while self.start != self.end:
