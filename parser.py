@@ -188,7 +188,7 @@ class LLOneParser:
                 if arr[0] == "#":
                     node2 = Node(arr[0], [], node)
                     node.children.append(node2)
-                    tree.print()
+                    return tree.print()
                 return "\nValid String!"
             elif stack[0] not in self.term_user_def:
                 x = self.nt_list.index(stack[0])
@@ -228,7 +228,3 @@ class LLOneParser:
                 else:
                     return "\nInvalid String! " \
                            "Unmatched terminal symbols"
-
-
-if __name__ == "__main__":
-    LLOneParser()

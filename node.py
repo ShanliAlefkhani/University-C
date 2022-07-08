@@ -8,7 +8,10 @@ class Node:
         return self.name
 
     def print(self, level=-1):
+        s = ""
         if self.parent:
-            print(level * "\t" + str(self))
+            s = level * "\t" + str(self) + "\n"
         for c in self.children:
-            c.print(level + 1)
+            s += c.print(level + 1)
+
+        return s
