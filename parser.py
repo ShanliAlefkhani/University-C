@@ -8,7 +8,7 @@ class LLOneParser:
     rules = RULES
     non_term_user_def = VARIABLES
     term_user_def = TERMINALS
-    sample_input_string = "def int T_ID ( ) { return ! T_ID == T_HEX ; }"
+    sample_input_string = "def int T_ID ( int T_ID , int T_ID ) { return T_ID + T_ID ; } def int T_ID ( ) { int T_ID ; T_ID = T_DEC ; return T_ID ( T_ID , T_DEC ) ; }"
     start_symbol = "Program"
 
     def __init__(self):
