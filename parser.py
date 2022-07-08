@@ -25,7 +25,7 @@ class LLOneParser:
 
         self.parsing_table, self.is_ll_one, self.tab_term = self.create_parse_table()
 
-        self.validate_string_using_stack_buffer()
+        self.ast_string = self.validate_string_using_stack_buffer()
 
     @staticmethod
     def remove_left_recursion(diction):
@@ -228,3 +228,6 @@ class LLOneParser:
                 else:
                     return "\nInvalid String! " \
                            "Unmatched terminal symbols"
+
+    def get_ast_string(self):
+        return self.ast_string
