@@ -189,7 +189,6 @@ class LLOneParser:
                     node2 = Node(arr[0], [], node)
                     node.children.append(node2)
                     return tree.print()
-                return "\nValid String!"
             elif stack[0] not in self.term_user_def:
                 x = self.nt_list.index(stack[0])
                 y = self.tab_term.index(buffer[-1])
@@ -226,8 +225,7 @@ class LLOneParser:
                     buffer = buffer[:-1]
                     stack = stack[1:]
                 else:
-                    return "\nInvalid String! " \
-                           "Unmatched terminal symbols"
+                    return "\nInvalid String! Unmatched terminal symbols"
 
     def get_ast_string(self):
         return self.ast_string
