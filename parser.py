@@ -1,6 +1,7 @@
 from typing import Optional
 
 from constants import RULES, VARIABLES, TERMINALS
+from node import Node
 
 
 class LLOneParser:
@@ -156,15 +157,12 @@ class LLOneParser:
         return mat, is_ll_one, terminals
 
     def validate_string_using_stack_buffer(self):
-        def f(a, t):
+        def f(a):
             if a[0] == "#":
-                print(t + a[0])
-                t += "\t"
                 a = a[1:]
                 while a[0] == ".":
-                    t = t[1:]
                     a = a[1:]
-            return a, t
+            return a
 
         if self.is_ll_one is False:
             return f"\nInput String = \"{self.sample_input_string}\"\n Grammar is not LL(1)"
@@ -176,25 +174,28 @@ class LLOneParser:
         buffer = ['$'] + input_string
 
         arr = [self.start_symbol, ]
-        tab_size = ""
+        node = tree = Node("head", [])
 
         print("{:>40} {:>40} {:>40}".format("Buffer", "Stack", "Action"))
 
         while True:
             if stack == ['$'] and buffer == ['$']:
-                # print("{:>40} {:>40} {:>40}".format(' '.join(buffer), ' '.join(stack), "Valid"))
+                print("{:>40} {:>40} {:>40}".format(' '.join(buffer), ' '.join(stack), "Valid"))
                 if arr[0] == "#":
-                    print(tab_size + arr[0])
+                    node2 = Node(arr[0], [], node)
+                    node.children.append(node2)
+                    tree.print()
                 return "\nValid String!"
             elif stack[0] not in self.term_user_def:
                 x = self.nt_list.index(stack[0])
                 y = self.tab_term.index(buffer[-1])
                 if self.parsing_table[x][y] != '':
                     entry = self.parsing_table[x][y]
-                    # print("{:>40} {:>40} {:>45}".format(' '.join(buffer), ' '.join(stack), f"T[{stack[0]}][{buffer[-1]}] = {entry}"))
-                    arr, tab_size = f(arr, tab_size)
-                    print(tab_size + arr[0])
-                    tab_size += "\t"
+                    print("{:>40} {:>40} {:>45}".format(' '.join(buffer), ' '.join(stack), f"T[{stack[0]}][{buffer[-1]}] = {entry}"))
+                    arr = f(arr)
+                    node2 = Node(arr[0], [], node)
+                    node.children.append(node2)
+                    node = node2
                     arr = arr[1:]
                     arr2 = []
                     for kkk in entry.split("->")[1].split():
@@ -209,13 +210,14 @@ class LLOneParser:
                     return f"\nInvalid String! No rule at Table[{stack[0]}][{buffer[-1]}]."
             else:
                 if stack[0] == buffer[-1]:
-                    # print("{:>40} {:>40} {:>40}".format(' '.join(buffer), ' '.join(stack), f"Matched:{stack[0]}"))
-                    arr, tab_size = f(arr, tab_size)
-                    print(tab_size + arr[0])
-                    tab_size += "\t"
+                    print("{:>40} {:>40} {:>40}".format(' '.join(buffer), ' '.join(stack), f"Matched:{stack[0]}"))
+                    arr = f(arr)
+                    node2 = Node(arr[0], [], node)
+                    node.children.append(node2)
+                    node = node2
                     arr = arr[1:]
                     while arr[0] == ".":
-                        tab_size = tab_size[1:]
+                        node = node.parent
                         arr = arr[1:]
                     buffer = buffer[:-1]
                     stack = stack[1:]
