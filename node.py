@@ -7,7 +7,7 @@ class Node:
     def __str__(self):
         return self.name
 
-    def tree_print(self, level=0):
+    def print(self, level=0):
         print(level * "\t", str(self))
         for c in self.children:
-            c.tree_print(level + 1)
+            c.print(level + 1)

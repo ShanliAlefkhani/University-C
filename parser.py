@@ -157,12 +157,16 @@ class LLOneParser:
         return mat, is_ll_one, terminals
 
     def validate_string_using_stack_buffer(self):
-        def f(a):
+        def f(a, n):
             if a[0] == "#":
+                n2 = Node(arr[0], [], n)
+                n.children.append(n2)
+                n = n2
                 a = a[1:]
                 while a[0] == ".":
+                    n = n.parent
                     a = a[1:]
-            return a
+            return a, n
 
         if self.is_ll_one is False:
             return f"\nInput String = \"{self.sample_input_string}\"\n Grammar is not LL(1)"
@@ -192,7 +196,7 @@ class LLOneParser:
                 if self.parsing_table[x][y] != '':
                     entry = self.parsing_table[x][y]
                     print("{:>40} {:>40} {:>45}".format(' '.join(buffer), ' '.join(stack), f"T[{stack[0]}][{buffer[-1]}] = {entry}"))
-                    arr = f(arr)
+                    arr, node = f(arr, node)
                     node2 = Node(arr[0], [], node)
                     node.children.append(node2)
                     node = node2
@@ -211,7 +215,7 @@ class LLOneParser:
             else:
                 if stack[0] == buffer[-1]:
                     print("{:>40} {:>40} {:>40}".format(' '.join(buffer), ' '.join(stack), f"Matched:{stack[0]}"))
-                    arr = f(arr)
+                    arr, node = f(arr, node)
                     node2 = Node(arr[0], [], node)
                     node.children.append(node2)
                     node = node2
