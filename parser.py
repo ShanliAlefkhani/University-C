@@ -10,8 +10,8 @@ class LLOneParser:
     term_user_def = TERMINALS
     start_symbol = "Program"
 
-    def __init__(self, sample_input_string):
-        self.sample_input_string = sample_input_string
+    def __init__(self, input_string):
+        self.input_string = input_string
         self.diction = {}
         for rule in self.rules:
             k = rule.split("->")
@@ -31,45 +31,45 @@ class LLOneParser:
     def remove_left_recursion(diction):
         store = {}
         for lhs in diction:
-            alphaRules = []
-            betaRules = []
-            allrhs = diction[lhs]
-            for subrhs in allrhs:
-                if subrhs[0] == lhs:
-                    alphaRules.append(subrhs[1:])
+            alpha_rules = []
+            beta_rules = []
+            all_rhs = diction[lhs]
+            for sub_rhs in all_rhs:
+                if sub_rhs[0] == lhs:
+                    alpha_rules.append(sub_rhs[1:])
                 else:
-                    betaRules.append(subrhs)
-            if len(alphaRules) != 0:
+                    beta_rules.append(sub_rhs)
+            if len(alpha_rules) != 0:
                 lhs_ = lhs + "'"
                 while (lhs_ in diction.keys()) or (lhs_ in store.keys()):
                     lhs_ += "'"
-                for b in range(0, len(betaRules)):
-                    betaRules[b].append(lhs_)
-                diction[lhs] = betaRules
-                for a in range(0, len(alphaRules)):
-                    alphaRules[a].append(lhs_)
-                alphaRules.append(['#'])
-                store[lhs_] = alphaRules
+                for b in range(0, len(beta_rules)):
+                    beta_rules[b].append(lhs_)
+                diction[lhs] = beta_rules
+                for a in range(0, len(alpha_rules)):
+                    alpha_rules[a].append(lhs_)
+                alpha_rules.append(['#'])
+                store[lhs_] = alpha_rules
         for left in store:
             diction[left] = store[left]
         return diction
 
     @staticmethod
     def left_factoring(diction):
-        newDict = {}
+        new_dict = {}
         for lhs in diction:
-            allrhs = diction[lhs]
+            all_rhs = diction[lhs]
             temp = dict()
-            for subrhs in allrhs:
-                if subrhs[0] not in list(temp.keys()):
-                    temp[subrhs[0]] = [subrhs]
+            for sub_rhs in all_rhs:
+                if sub_rhs[0] not in list(temp.keys()):
+                    temp[sub_rhs[0]] = [sub_rhs]
                 else:
-                    temp[subrhs[0]].append(subrhs)
+                    temp[sub_rhs[0]].append(sub_rhs)
             new_rule = []
             tempo_dict = {}
             for term_key in temp:
-                allStartingWithTermKey = temp[term_key]
-                if len(allStartingWithTermKey) > 1:
+                all_starting_with_term_key = temp[term_key]
+                if len(all_starting_with_term_key) > 1:
                     lhs_ = lhs + "'"
                     while (lhs_ in diction.keys()) or (lhs_ in tempo_dict.keys()):
                         lhs_ += "'"
@@ -79,11 +79,11 @@ class LLOneParser:
                         ex_rules.append(g[1:])
                     tempo_dict[lhs_] = ex_rules
                 else:
-                    new_rule.append(allStartingWithTermKey[0])
-            newDict[lhs] = new_rule
-            for key in tempo_dict:
-                newDict[key] = tempo_dict[key]
-        return newDict
+                    new_rule.append(all_starting_with_term_key[0])
+            new_dict[lhs] = new_rule
+            for key in tempo_dict.keys():
+                new_dict[key] = tempo_dict[key]
+        return new_dict
 
     def first(self, rule) -> Optional[list]:
         if self.k.get(rule.__str__()):
@@ -133,7 +133,7 @@ class LLOneParser:
         nt_list = self.nt_list
         terminals = self.term_user_def
         terminals.append('$')
-        mat = [["" for y in terminals] for x in self.diction]
+        mat = [["" for _ in terminals] for _ in self.diction]
 
         is_ll_one = True
 
@@ -157,34 +157,31 @@ class LLOneParser:
         return mat, is_ll_one, terminals
 
     def validate_string_using_stack_buffer(self):
-        def f(a, n):
-            if a[0] == "#":
-                n2 = Node(arr[0], [], n)
-                n.children.append(n2)
-                n = n2
+        def g(a, n, back=True):
+            n2 = Node(arr[0], [], n)
+            n.children.append(n2)
+            n = n2
+            a = a[1:]
+            while back and a[0] == ".":
+                n = n.parent
                 a = a[1:]
-                while a[0] == ".":
-                    n = n.parent
-                    a = a[1:]
             return a, n
 
         if self.is_ll_one is False:
-            return f"\nInput String = \"{self.sample_input_string}\"\n Grammar is not LL(1)"
+            return f"\nInput String = \"{self.input_string}\"\n Grammar is not LL(1)"
 
         stack = [self.start_symbol, '$']
-
-        input_string = self.sample_input_string.split()
+        input_string = self.input_string.split()
         input_string.reverse()
         buffer = ['$'] + input_string
-
         arr = [self.start_symbol, ]
-        node = tree = Node("head", [])
+        node = tree = Node("head", [], None)
 
-        print("{:>40} {:>40} {:>40}".format("Buffer", "Stack", "Action"))
+        print("{:<180} {:>60}\t{:<60}".format("Buffer", "Stack", "Action"))
 
         while True:
             if stack == ['$'] and buffer == ['$']:
-                print("{:>40} {:>40} {:>40}".format(' '.join(buffer), ' '.join(stack), "Valid"))
+                print("{:<180} {:>60}\t{:<60}".format(' '.join(buffer), ' '.join(stack), "Valid"))
                 if arr[0] == "#":
                     node2 = Node(arr[0], [], node)
                     node.children.append(node2)
@@ -194,12 +191,12 @@ class LLOneParser:
                 y = self.tab_term.index(buffer[-1])
                 if self.parsing_table[x][y] != '':
                     entry = self.parsing_table[x][y]
-                    print("{:>40} {:>40} {:>45}".format(' '.join(buffer), ' '.join(stack), f"T[{stack[0]}][{buffer[-1]}] = {entry}"))
-                    arr, node = f(arr, node)
-                    node2 = Node(arr[0], [], node)
-                    node.children.append(node2)
-                    node = node2
-                    arr = arr[1:]
+                    print("{:<180} {:>60}\t{:<60}".format(
+                        ' '.join(buffer), ' '.join(stack), f"T[{stack[0]}][{buffer[-1]}] = {entry}")
+                    )
+                    if arr[0] == "#":
+                        arr, node = g(arr, node)
+                    arr, node = g(arr, node, False)
                     arr2 = []
                     for kkk in entry.split("->")[1].split():
                         arr2.append(kkk)
@@ -207,25 +204,20 @@ class LLOneParser:
                     arr = arr2 + arr
                     lhs_rhs = entry.split("->")
                     lhs_rhs[1] = lhs_rhs[1].replace('#', '').strip()
-                    entryrhs = lhs_rhs[1].split()
-                    stack = entryrhs + stack[1:]
+                    entry_rhs = lhs_rhs[1].split()
+                    stack = entry_rhs + stack[1:]
                 else:
-                    return f"\nInvalid String! No rule at Table[{stack[0]}][{buffer[-1]}]."
+                    return f"Invalid String! No rule at Table[{stack[0]}][{buffer[-1]}]."
             else:
                 if stack[0] == buffer[-1]:
-                    print("{:>40} {:>40} {:>40}".format(' '.join(buffer), ' '.join(stack), f"Matched:{stack[0]}"))
-                    arr, node = f(arr, node)
-                    node2 = Node(arr[0], [], node)
-                    node.children.append(node2)
-                    node = node2
-                    arr = arr[1:]
-                    while arr[0] == ".":
-                        node = node.parent
-                        arr = arr[1:]
+                    print("{:<180} {:>60}\t{:<60}".format(' '.join(buffer), ' '.join(stack), f"Matched:{stack[0]}"))
+                    if arr[0] == "#":
+                        arr, node = g(arr, node)
+                    arr, node = g(arr, node)
                     buffer = buffer[:-1]
                     stack = stack[1:]
                 else:
-                    return "\nInvalid String! Unmatched terminal symbols"
+                    return "Invalid String! Unmatched terminal symbols"
 
     def get_ast_string(self):
         return self.ast_string

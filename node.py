@@ -1,5 +1,5 @@
 class Node:
-    def __init__(self, name, children=None, parent=None):
+    def __init__(self, name, children, parent):
         self.name = name
         self.children = children
         self.parent = parent
@@ -13,5 +13,4 @@ class Node:
             s = level * "\t" + str(self) + "\n"
         for c in self.children:
             s += c.print(level + 1)
-
         return s

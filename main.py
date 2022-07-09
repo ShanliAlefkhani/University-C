@@ -1,26 +1,17 @@
 import sys
 
-from constants import T_KEY, T_SYM
 from parser import LLOneParser
 from tokenizer import Tokenizer
+from utils import convert_tokens
 
 if __name__ == '__main__':
-    input_file_address = "source.decaf" # sys.argv[1]
+    input_file_address = sys.argv[1]
     decaf_code = open(input_file_address).read()
 
     decaf_tokenizer = Tokenizer(decaf_code)
     tokens, symbols_table = decaf_tokenizer.run()
-    parser_input_list = []
-    for t in tokens:
-        if t[0] is T_KEY:
-            parser_input_list.append(symbols_table[t[1]])
-        elif t[0] is T_SYM:
-            if t[1] in ["//", "*/", "/*"]:
-                continue
-            parser_input_list.append(t[1])
-        else:
-            parser_input_list.append(t[0])
-    ll_one_parser = LLOneParser(" ".join(parser_input_list))
+
+    ll_one_parser = LLOneParser(" ".join(convert_tokens(tokens, symbols_table)))
     abstract_syntax_tree_string = ll_one_parser.get_ast_string()
 
     tokens_file = open("source_tokens.txt", "w")
