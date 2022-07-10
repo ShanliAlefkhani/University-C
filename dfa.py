@@ -63,7 +63,7 @@ class DFA:
             return None
 
 
-keywords = ["def", "if", "else", "while", "return", "break", "continue", "int", "bool", "void", "true", "false"]
+keywords = ["def", "if", "else", "while", "return", "break", "continue", "int", "string", "bool", "void", "true", "false"]
 symbols = ["*", "+", "-", "||", "&&", "=", "==", ">", "<", ">=", "<=", "/", "%", "!", "!=", "(", ")", "[", "]", "{", "}", ";", "//", "/*", "*/", "\"", ","]
 
 dfa_key = DFA(language=keywords, token=T_KEY)
