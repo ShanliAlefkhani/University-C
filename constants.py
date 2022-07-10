@@ -76,7 +76,7 @@ RULES = [
     "V1 -> [ T_DEC ] | #",
     "V2 -> = Lit | #",
 
-    "Type -> int | bool | void",
+    "Type -> string | int | bool | void",
 
     "FuncDecl -> def Type T_ID ( F1 ) Block",
     "F1 -> Params | #",
@@ -114,8 +114,8 @@ RULES = [
     "Args -> Expr A1",
     "A1 -> , Expr A1 | #",
 
-    "Lit -> T_DEC | T_HEX | T_STR | true | false",
+    "Lit -> T_DEC | T_HEX | \" T_STR \" | true | false",
 ]
 
-VARIABLES = ["Program", "P1", "P2", "VarDecl", "V1", "Type", "FuncDecl", "F1", "P3", "Block", "B1", "B2", "Stmt", "S1", "S2", "Expr", "BaseExpr", "Loc", "L1", "FuncCall", "C1", "Args", "A1", "Lit", "BinOp", "UnOp", "X1", "X2"]
-TERMINALS = ["def", "if", "else", "while", "return", "break", "continue", "int", "bool", "void", "true", "false", "*", "+", "-", "||", "&&", "=", "==", ">", "<", ">=", "<=", "/", "%", "!", "!=", "(", ")", "[", "]", "{", "}", ";", "//", "/*", "*/", "\"", ",", "#", "T_KEY", "T_STR", "T_SYM", "T_ID", "T_DEC", "T_HEX",]
+VARIABLES = ["Program", "P1", "P2", "VarDecl", "V1", "V2", "Type", "FuncDecl", "F1", "P3", "Block", "B1", "B2", "Stmt", "S1", "S2", "Expr", "BaseExpr", "Loc", "L1", "FuncCall", "C1", "Args", "A1", "Lit", "BinOp", "UnOp", "X1", "X2"]
+TERMINALS = ["def", "if", "else", "while", "return", "break", "continue", "int", "bool", "void", "string", "true", "false", "*", "+", "-", "||", "&&", "=", "==", ">", "<", ">=", "<=", "/", "%", "!", "!=", "(", ")", "[", "]", "{", "}", ";", "//", "/*", "*/", "\"", ",", "#", "T_KEY", "T_STR", "T_SYM", "T_ID", "T_DEC", "T_HEX",]
