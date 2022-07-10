@@ -72,8 +72,9 @@ RULES = [
     "Program -> P1 Program | #",
     "P1 -> VarDecl | FuncDecl",
 
-    "VarDecl -> Type T_ID V1 ;",
+    "VarDecl -> Type T_ID V1 V2 ;",
     "V1 -> [ T_DEC ] | #",
+    "V2 -> = Lit | #",
 
     "Type -> int | bool | void",
 
@@ -87,7 +88,7 @@ RULES = [
     "B1 -> VarDecl B1 | #",
     "B2 -> Stmt B2 | #",
 
-    "Stmt -> T_ID X2 | if (Expr) Block S1 | while (Expr) Block | return S2 ; | break ; | continue ; ",
+    "Stmt -> T_ID X2 | if ( Expr ) Block S1 | while ( Expr ) Block | return S2 ; | break ; | continue ; ",
     "S1 -> else Block | #",
     "S2 -> Expr | #",
 
